@@ -8,9 +8,16 @@ from src.models.user_model import UserModel
 class TestUser:
     @pytest.mark.smoke
     def test_check_status(self, app_url):
+        expected_status = "success"
+
         get_response = httpx.get(f"{app_url}/status")
 
-        assert get_response.status_code == HTTPStatus.OK
+        response_body = get_response.json()
+
+        assert (
+                get_response.status_code == HTTPStatus.OK
+                and response_body["status"] == expected_status
+        )
 
     def test_get_users(self, app_url):
         get_response = httpx.get(f"{app_url}/api/users/")
