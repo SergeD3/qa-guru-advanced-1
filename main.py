@@ -36,7 +36,7 @@ def get_user(user_id: int):
     return users[user_id - 1]
 
 
-@app.get("/api/users/", status_code=HTTPStatus.OK, response_model=Page[UserModel])
+@app.get("/api/users", status_code=HTTPStatus.OK, response_model=Page[UserModel])
 def get_users():
     return paginate(sequence=users)
 
