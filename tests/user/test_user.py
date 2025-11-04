@@ -2,7 +2,8 @@ import pytest
 import httpx
 
 from http import HTTPStatus
-from src.models.user_model import UserModel
+from src.app.models.user_model import UserModel
+from src.app.models.pagination_model import PaginationModel
 
 
 class TestUser:
@@ -27,8 +28,7 @@ class TestUser:
 
         users = get_response.json()
 
-        for user in users:
-            UserModel.model_validate(user)
+        PaginationModel.model_validate(users)
 
     @pytest.mark.parametrize("user_id", [1, 6, 12])
     def test_get_user_valid_id(self, app_url, user_id: int):
@@ -52,8 +52,8 @@ class TestUser:
 
         assert get_response.status_code == HTTPStatus.UNPROCESSABLE_ENTITY
 
-
+    @pytest.mark.debug
     def test_users_no_duplicates(self, get_users):
-        users_ids = [user["id"] for user in get_users]
+        users_ids = [user["id"] for user in get_users["items"]]
 
         assert len(users_ids) == len(set(users_ids))

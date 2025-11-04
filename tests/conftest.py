@@ -3,8 +3,6 @@ import pytest
 import os
 import httpx
 
-from src.models.user_model import UserModel
-
 
 @pytest.fixture(autouse=True)
 def envs():
@@ -17,7 +15,7 @@ def app_url():
 
 
 @pytest.fixture
-def get_users(app_url) -> list[UserModel]:
+def get_users(app_url) -> dict:
     get_response = httpx.get(f"{app_url}/api/users/")
 
     return get_response.json()

@@ -2,7 +2,7 @@ import pytest
 import httpx
 
 from http import HTTPStatus
-from src.models.pagination_model import PaginationModel
+from src.app.models.pagination_model import PaginationModel
 
 
 class TestUserPagination:
