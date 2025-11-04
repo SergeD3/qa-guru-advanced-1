@@ -12,7 +12,7 @@ class TestUserPagination:
         expected_item_number: int = 12
         expected_pages_number: int = 1
 
-        get_response = httpx.get(f"{app_url}/api/users")
+        get_response = httpx.get(f"{app_url}/api/users/")
 
         response_body = get_response.json()
         PaginationModel.model_validate(response_body)
@@ -33,7 +33,7 @@ class TestUserPagination:
         [12, 1]
     ])
     def test_users_size_pagination(self, app_url, size: int, expected_number: int):
-        get_response = httpx.get(f"{app_url}/api/users?size={size}")
+        get_response = httpx.get(f"{app_url}/api/users/?size={size}")
 
         response_body = get_response.json()
         PaginationModel.model_validate(response_body)
@@ -84,7 +84,7 @@ class TestUserPagination:
             size: int,
             expected_item_number: int,
     ):
-        get_response = httpx.get(f"{app_url}/api/users?size={size}&page={page}")
+        get_response = httpx.get(f"{app_url}/api/users/?size={size}&page={page}")
 
         response_body = get_response.json()
         PaginationModel.model_validate(response_body)
