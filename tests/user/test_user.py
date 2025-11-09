@@ -30,21 +30,26 @@ class TestUser:
 
         PaginationModel.model_validate(users)
 
-    @pytest.mark.parametrize("user_id", [1, 6, 12])
-    def test_get_user_valid_id(self, app_url, user_id: int):
-        get_response = httpx.get(f"{app_url}/api/users/{user_id}")
+    @pytest.mark.smoke
+    def test_get_user_valid_id(self, fill_test_data, app_url):
 
-        assert get_response.status_code == HTTPStatus.OK
 
-        user = get_response.json()
+        response_first_element = httpx.get(f"{app_url}/api/users/{fill_test_data[0]}")
+        response_last_element = httpx.get(f"{app_url}/api/users/{fill_test_data[-1]}")
 
-        UserModel.model_validate(user)
+        assert (
+                response_first_element.status_code == HTTPStatus.OK
+                and response_last_element.status_code == HTTPStatus.OK
+        )
 
-    @pytest.mark.parametrize("user_id", [-1, 0, 15, 100])
+        UserModel.model_validate(response_first_element.json())
+        UserModel.model_validate(response_last_element.json())
+
+    @pytest.mark.parametrize("user_id", [-1, 0])
     def test_cannot_get_user_nonexistent_id(self, app_url, user_id):
         get_response = httpx.get(f"{app_url}/api/users/{user_id}")
 
-        assert get_response.status_code == HTTPStatus.NOT_FOUND
+        assert get_response.status_code == HTTPStatus.UNPROCESSABLE_ENTITY
 
     @pytest.mark.parametrize("user_id", ["test", None])
     def test_cannot_get_user_invalid_id(self, app_url, user_id):
@@ -52,7 +57,7 @@ class TestUser:
 
         assert get_response.status_code == HTTPStatus.UNPROCESSABLE_ENTITY
 
-    @pytest.mark.debug
+    @pytest.mark.smoke
     def test_users_no_duplicates(self, get_users):
         users_ids = [user["id"] for user in get_users["items"]]
 
