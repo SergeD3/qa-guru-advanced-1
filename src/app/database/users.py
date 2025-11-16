@@ -33,11 +33,17 @@ def create_user(user: UserModel) -> UserModel:
         return user
 
 
-def delete_user(user_id: int) -> None:
+def delete_user(user_id: int) -> bool:
     with Session(engine) as session:
         user = get_user(user_id=user_id)
+
+        if not user:
+            return False
+
         session.delete(user)
         session.commit()
+
+        return True
 
 
 def update_user(user_id: int, user: UserModel) -> UserModel | None:

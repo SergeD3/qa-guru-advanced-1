@@ -51,6 +51,11 @@ def delete_user(user_id: int) -> dict[str, str] | None:
     if user_id <= 0:
         raise HTTPException(status_code=HTTPStatus.UNPROCESSABLE_ENTITY)
 
-    users.delete_user(user_id=user_id)
+    result = users.delete_user(user_id=user_id)
+
+    if not result:
+        raise HTTPException(status_code=HTTPStatus.NOT_FOUND)
 
     return {"message": "User deleted"}
+
+
