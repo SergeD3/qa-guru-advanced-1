@@ -1,25 +1,16 @@
 
 FROM python:3.11
 
-
-WORKDIR /qa-guru-advanced-1
-
+WORKDIR app
 
 RUN pip install poetry
 
-
-# COPY ./requirements.txt /code/requirements.txt
-COPY pyproject.toml poetry.lock* README.md /qa-guru-advanced-1/
-
-
-# RUN pip install --no-cache-dir --upgrade -r /code/requirements.txt
 RUN poetry config virtualenvs.create false
 
+COPY pyproject.toml poetry.lock* README.md /app/
 
-RUN poetry install
+RUN poetry install --no-root
 
-
-COPY ./src /qa-guru-advanced-1/src
-
+COPY . /app
 
 CMD ["fastapi", "run", "src/app/main.py", "--port", "80"]
