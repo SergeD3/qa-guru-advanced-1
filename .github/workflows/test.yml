@@ -1,0 +1,27 @@
+
+on:
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  tests:
+    name: Test app
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-python@v6
+        with:
+          python-version: '3.10'
+          cache: 'pip'
+      - uses: Gr1N/setup-poetry@v8
+        with:
+          poetry-version: "2.2.1"
+
+      - run: poetry config virtualenvs.create false
+      - run: poetry install
+      - run: docker compose up -d --build
+      - run: pytest tests
+
+      - run: docker compose logs app
+        if: always()
