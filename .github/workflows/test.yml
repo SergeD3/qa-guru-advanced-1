@@ -23,7 +23,8 @@ jobs:
 
       - run: poetry config virtualenvs.create false
       - run: poetry install --no-root
-      - run: docker compose up -d --build
+      - run: docker compose build
+      - run: docker compose up -d
       - run: pytest tests --junit-xml=test-results.xml
         env:
           APP_URL: http://127.0.0.1:8002
