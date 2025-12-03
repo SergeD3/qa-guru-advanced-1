@@ -8,6 +8,9 @@ jobs:
   tests:
     name: Test app
     runs-on: ubuntu-latest
+    env:
+      POSTGRES_USER: ci
+      POSTGRES_PASSWORD: ci
     steps:
       - uses: actions/checkout@v6
       - uses: actions/setup-python@v6
@@ -19,7 +22,7 @@ jobs:
           poetry-version: "2.2.1"
 
       - run: poetry config virtualenvs.create false
-      - run: poetry install
+      - run: poetry install --no-root
       - run: docker compose up -d --build
       - run: pytest tests
 
